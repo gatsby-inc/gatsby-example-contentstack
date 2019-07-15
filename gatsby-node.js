@@ -2,7 +2,6 @@ const withTrailingSlash = part => part.slice(0, -1) === `/` ? part : `${part}/`
 
 exports.onCreateNode = ({ actions, node }) => {
   if (node.internal.type === `Contentstack_blogpost`) {
-    console.log(node)
     actions.createNodeField({
       node,
       name: `slug`,

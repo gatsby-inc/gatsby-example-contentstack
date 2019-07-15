@@ -1,7 +1,39 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/node-apis/
- */
+const withTrailingSlash = part => part.slice(0, -1) === `/` ? part : `${part}/`
 
-// You can delete this file if you're not using it
+exports.onCreateNode = ({ actions, node }) => {
+  if (node.internal.type === `Contentstack_blogpost`) {
+    console.log(node)
+    actions.createNodeField({
+      node,
+      name: `slug`,
+      value: withTrailingSlash(node.url)
+    })
+  }
+}
+
+exports.createPages = async function createPages({ actions, graphql }) {
+  const { data } = await graphql(`
+    {
+      allContentstackBlogpost {
+        nodes {
+          fields {
+            slug
+          }
+          url
+        }
+      }
+    }
+  `)
+
+  const blogPostTemplate = require.resolve(`./src/templates/blog-post.js`)
+
+  data.allContentstackBlogpost.nodes.forEach(node => {
+    actions.createPage({
+      path: node.fields.slug,
+      component: blogPostTemplate,
+      context: {
+        url: node.url
+      }
+    })
+  })
+}

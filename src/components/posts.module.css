@@ -1,0 +1,15 @@
+.posts-container {
+  display: grid;
+  grid-row-gap: 1rem;
+}
+
+.post {
+  padding: 0.5rem;
+  border: 1px solid #eee;
+}
+
+@media only screen and (min-width: 768px) {
+  .posts-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
